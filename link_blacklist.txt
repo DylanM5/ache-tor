@@ -1,2 +1,19 @@
 .*\.(jpg|jpeg|png|gif|bmp|pdf|doc|docx|ppt|pptx|xls|xlsx|exe|dmg|iso|zip|rar|tar|gz|mp3|mp4|avi|mov|wmv|flv|msi|apk|deb|rpm)$
 .*\.com.*
+
+# Block CSAM and child abuse content
+.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait|cp-|csam|pedo|12yo|14yo|8yo|10yo).*porn.*
+.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait).*nude.*
+.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait).*naked.*
+.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait).*sex.*
+.*porn.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen).*
+.*nude.*(child|kid|boy|girl).*
+.*naked.*(child|kid|boy|girl).*
+.*(pedo|pedophil|paedophil).*
+.*child.*(abuse|exploit).*
+.*(lolita|shotacon).*
+.*\d+.?y.?o.*(girl|boy|child).*
+.*(girls|boys).*(\d+|young|little).*
+.*little.*(girl|boy).*porn.*
+.*gay.?abuse.*
+.*spanking.*(child|kid|boy|girl|teen|young).*

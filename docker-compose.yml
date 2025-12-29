@@ -2,6 +2,7 @@ services:
   ache:
     image: vidanyu/ache
     command: startCrawl -c /config/ -s /config/tor.seeds -o /data -e tor
+    # command: startCrawl -c /config/ -s /config/tor.seeds -o /data -e tor -m /config/pageclassifier.yml
     ports:
       - "8080:8080"
     environment:

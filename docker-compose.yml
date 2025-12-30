@@ -5,7 +5,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - JAVA_OPTS=-Xms1g -Xmx2g
+      - JAVA_OPTS=-Xms16g -Xmx32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=28 -XX:ConcGCThreads=14
+    deploy:
+      resources:
+        limits:
+          cpus: '36'
+          memory: 40G
+        reservations:
+          cpus: '28'
+          memory: 32G
     volumes:
       # mounts /config and /data directories to paths relative to path where this file is located
       - ./data-ache/:/data
@@ -24,19 +32,96 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms4g -Xmx4g # heap size
+      - ES_JAVA_OPTS=-Xms48g -Xmx48g -XX:+UseG1GC
+      - indices.memory.index_buffer_size=20%
+      - thread_pool.write.queue_size=2000
+      - thread_pool.search.queue_size=2000
     ulimits:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 64G
+        reservations:
+          cpus: '4'
+          memory: 48G
     volumes:
       - elastic_volume:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+  
+  # HAProxy load balancer
   torproxy:
-    image: dperson/torproxy
+    image: haproxy:2.8-alpine
     ports:
       - "8118:8118"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - torproxy1
+      - torproxy2
+      - torproxy3
+      - torproxy4
+      - torproxy5
+      - torproxy6
+      - torproxy7
+      - torproxy8
+  
+  # 8 Tor proxy instances for load distribution
+  torproxy1:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy2:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy3:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy4:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy5:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy6:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy7:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  torproxy8:
+    image: dperson/torproxy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
 volumes:
   elastic_volume:

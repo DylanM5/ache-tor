@@ -22,8 +22,8 @@ crawler_manager.downloader.download_thread_pool_size: 200
 
 # Configure ACHE to download .onion URLs through the TOR proxy container
 crawler_manager.downloader.fetch_duration: 60000
-crawler_manager.downloader.tor.max_retry_count: 1
-crawler_manager.downloader.tor.socket_timeout: 45000
-crawler_manager.downloader.tor.connection_timeout: 30000
-crawler_manager.downloader.tor.connection_request_timeout: 30000
+crawler_manager.downloader.tor.max_retry_count: 2
+crawler_manager.downloader.tor.socket_timeout: 60000
+crawler_manager.downloader.tor.connection_timeout: 60000
+crawler_manager.downloader.tor.connection_request_timeout: 60000
 crawler_manager.downloader.torproxy: http://torproxy:8118

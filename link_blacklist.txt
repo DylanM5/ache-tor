@@ -1,8 +1,8 @@
 .*\.(jpg|jpeg|png|gif|bmp|pdf|doc|docx|ppt|pptx|xls|xlsx|exe|dmg|iso|zip|rar|tar|gz|mp3|mp4|avi|mov|wmv|flv|msi|apk|deb|rpm)$
 .*\.com.*
 
-# Block CSAM and child abuse content
-.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait|cp-|csam|pedo|12yo|14yo|8yo|10yo).*porn.*
+# Block CSAM and child abuse content (AI Generated)
+.*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait|cp-|csam|pedo|9yo|13yo|12yo|14yo|8yo|10yo|15yo).*porn.*
 .*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait).*nude.*
 .*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait).*naked.*
 .*(child|kid|boy|girl|teen|young|underage|pedo|loli|shota|preteen|pthc|ptsc|jailbait).*sex.*

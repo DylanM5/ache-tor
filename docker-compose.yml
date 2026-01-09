@@ -5,22 +5,24 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - JAVA_OPTS=-Xms16g -Xmx32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=28 -XX:ConcGCThreads=14
+      - JAVA_OPTS=-Xms48g -Xmx64g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=16 -XX:ConcGCThreads=8 -XX:G1HeapRegionSize=32m
     deploy:
       resources:
         limits:
-          cpus: '36'
-          memory: 40G
+          cpus: '16'
+          memory: 96G
         reservations:
-          cpus: '28'
-          memory: 32G
+          cpus: '12'
+          memory: 80G
+        restart_policy:
+          condition: any
+          delay: 12h
+          max_attempts: 3
+          window: 120s
     volumes:
       # mounts /config and /data directories to paths relative to path where this file is located
       - ./data-ache/:/data
       - ./:/config
-    links:
-      - torproxy
-      - elasticsearch
     depends_on:
       - torproxy
       - elasticsearch
@@ -28,100 +30,48 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
     environment:
-      - discovery.type=single-node
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms48g -Xmx48g -XX:+UseG1GC
-      - indices.memory.index_buffer_size=20%
-      - thread_pool.write.queue_size=2000
-      - thread_pool.search.queue_size=2000
+      - ES_JAVA_OPTS=-Xms56g -Xmx56g -XX:+UseG1GC -XX:G1HeapRegionSize=32m
+      - indices.memory.index_buffer_size=25%
+      - thread_pool.write.queue_size=4000
+      - thread_pool.search.queue_size=4000
     ulimits:
       memlock:
         soft: -1
         hard: -1
       nofile:
-        soft: 65536
-        hard: 65536
+        soft: 131072
+        hard: 131072
     deploy:
       resources:
         limits:
+          cpus: '12'
+          memory: 120G
+        reservations:
           cpus: '8'
           memory: 64G
-        reservations:
-          cpus: '4'
-          memory: 48G
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 3
+          window: 120s
     volumes:
       - elastic_volume:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
   
-  # HAProxy load balancer
+  # Tor proxy
   torproxy:
-    image: haproxy:2.8-alpine
-    ports:
-      - "8118:8118"
-    volumes:
-      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-    depends_on:
-      - torproxy1
-      - torproxy2
-      - torproxy3
-      - torproxy4
-      - torproxy5
-      - torproxy6
-      - torproxy7
-      - torproxy8
-  
-  # 8 Tor proxy instances for load distribution
-  torproxy1:
     image: dperson/torproxy
     deploy:
       resources:
         limits:
-          memory: 1G
-  torproxy2:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-  torproxy3:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-  torproxy4:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-  torproxy5:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-  torproxy6:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-  torproxy7:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-  torproxy8:
-    image: dperson/torproxy
-    deploy:
-      resources:
-        limits:
-          memory: 1G
+          cpus: '1'
+          memory: 2G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
 volumes:
   elastic_volume:

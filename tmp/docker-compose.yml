@@ -1,0 +1,55 @@
+services:
+  # Main DB
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: elasticsearch
+    environment:
+      - ES_JAVA_OPTS=-Xms56g -Xmx56g -XX:+UseG1GC -XX:G1HeapRegionSize=32m
+      - indices.memory.index_buffer_size=25%
+      - thread_pool.write.queue_size=4000
+      - thread_pool.search.queue_size=4000
+    volumes:
+      - elastic_volume:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # Tor proxy
+  torproxy:
+    image: dperson/torproxy
+    container_name: torproxy
+
+  ache:
+    image: vidanyu/ache
+    container_name: ache
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Xms48g -Xmx64g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=16 -XX:ConcGCThreads=8 -XX:G1HeapRegionSize=32m
+    volumes:
+      # mounts /config and /data directories to paths relative to path where this file is located
+      - ./data-ache/:/data
+      - ./:/config
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      torproxy:
+        condition: service_started
+    command: "startCrawl -c /config/ -s /config/tor.seeds -o /data -e tor"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+  
+  
+
+volumes:
+  elastic_volume:
+    driver: local

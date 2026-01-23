@@ -26,4 +26,4 @@ crawler_manager.downloader.tor.max_retry_count: 1
 crawler_manager.downloader.tor.socket_timeout: 30000
 crawler_manager.downloader.tor.connection_timeout: 30000
 crawler_manager.downloader.tor.connection_request_timeout: 30000
-crawler_manager.downloader.torproxy: http://torproxy:8118
+crawler_manager.downloader.torproxy: http://haproxy:8888

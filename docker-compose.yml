@@ -13,10 +13,12 @@ services:
       - ./data-ache/:/data
       - ./:/config
     links:
-      - torproxy
+      - torproxy1
+      - torproxy2
       - elasticsearch
     depends_on:
-      - torproxy
+      - torproxy1
+      - torproxy2
       - elasticsearch
   # Main DB
   elasticsearch:
@@ -40,8 +42,31 @@ services:
       
   torproxy:
     image: dperson/torproxy
+        - torproxy1
+        - torproxy2
     ports:
       - "8118:8118"
+
+
+    flaresolverr:
+      image: ghcr.io/flaresolverr/flaresolverr:latest
+      ports:
+        - "8191:8191"
+      environment:
+        - LOG_LEVEL=info
+      depends_on:
+        - torproxy1
+        - torproxy2
+
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - torproxy1
+      - torproxy2
 
 volumes:
   elastic_volume:

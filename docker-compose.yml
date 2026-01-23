@@ -47,17 +47,6 @@ services:
     ports:
       - "8118:8118"
 
-
-    flaresolverr:
-      image: ghcr.io/flaresolverr/flaresolverr:latest
-      ports:
-        - "8191:8191"
-      environment:
-        - LOG_LEVEL=info
-      depends_on:
-        - torproxy1
-        - torproxy2
-
   haproxy:
     image: haproxy:latest
     ports:

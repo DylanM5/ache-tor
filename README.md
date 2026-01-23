@@ -4,7 +4,6 @@ An [ACHE](https://github.com/VIDA-NYU/ache) implementation to discover and index
 
 # TODO
 - Literature review
-- Get running on server
 - Fetch only .onion, homepages, and pages that have account creation capabilities 
     - SMILE model or DB queries?
 - Migrate to GitLab

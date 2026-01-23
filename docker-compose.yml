@@ -4,8 +4,10 @@ services:
     command: startCrawl -c /config/ -s /config/tor.seeds -o /data -e tor
     ports:
       - "8080:8080"
+    env_file:
+      - ./.env
     environment:
-      - JAVA_OPTS=-Xms1g -Xmx2g
+      - JAVA_OPTS=-Xms${MIN_RAM}g -Xmx${MAX_RAM}g
     volumes:
       # mounts /config and /data directories to paths relative to path where this file is located
       - ./data-ache/:/data
@@ -19,12 +21,14 @@ services:
   # Main DB
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    env_file:
+      - ./.env
     environment:
       - discovery.type=single-node
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms4g -Xmx4g # Heap size
+      - ES_JAVA_OPTS=-Xms${MIN_RAM}g -Xmx${MAX_RAM}g # Heap size
     ulimits:
       memlock:
         soft: -1
@@ -33,6 +37,7 @@ services:
       - elastic_volume:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+      
   torproxy:
     image: dperson/torproxy
     ports:

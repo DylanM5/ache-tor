@@ -1,0 +1,10 @@
+# I think we will need to catagorize after the fact or use regex. This appears to no longer be supported.
+
+#type: smile
+#parameters:
+#  features_file: pageclassifier.features
+#  model_file: pageclassifier.model
+#  stopwords_file: stopwords.txt
+#  relevance_threshold: 0.6
+
+# for multi class classification we will likely need to process after the fact

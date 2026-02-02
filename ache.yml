@@ -1,7 +1,7 @@
 # Configure ELASTICSEARCH and FILES data formats
 target_storage.data_formats:
   - ELASTICSEARCH
-#  - FILES
+  - FILES
 
 target_storage.data_format.elasticsearch.rest.hosts:
   - http://elasticsearch:9200
@@ -9,20 +9,19 @@ target_storage.data_format.elasticsearch.rest.hosts:
 # Basic configuration in-depth web site crawling
 link_storage.link_strategy.use_scope: false
 link_storage.link_strategy.outlinks: true
-link_storage.scheduler.host_min_access_interval: 750
+target_storage.store_negative_pages: true
+link_storage.scheduler.host_min_access_interval: 1000
 link_storage.scheduler.max_pages_per_host: 100
-link_storage.scheduler.max_links: 1000
+link_storage.scheduler.max_links: 1000000
+link_storage.max_pages_per_domain: 10000
+link_storage.crawler.max_depth: -1
 link_storage.download_sitemap_xml: true
 link_storage.scheduler.ignored_robots_txt: true
-
-# Parallelism
-crawler_manager.downloader.max_connections: 500
-crawler_manager.downloader.max_connections_per_host: 20
-crawler_manager.downloader.download_thread_pool_size: 500
+crawler_manager.downloader.download_thread_pool_size: 700
 
 # Configure ACHE to download .onion URLs through the TOR proxy container
 crawler_manager.downloader.fetch_duration: 30000
-crawler_manager.downloader.tor.max_retry_count: 1
+crawler_manager.downloader.tor.max_retry_count: 2
 crawler_manager.downloader.tor.socket_timeout: 30000
 crawler_manager.downloader.tor.connection_timeout: 30000
 crawler_manager.downloader.tor.connection_request_timeout: 30000

@@ -1,7 +1,7 @@
 # Configure ELASTICSEARCH and FILES data formats
 target_storage.data_formats:
   - ELASTICSEARCH
-  - FILES
+  #- FILES
 
 target_storage.data_format.elasticsearch.rest.hosts:
   - http://elasticsearch:9200
